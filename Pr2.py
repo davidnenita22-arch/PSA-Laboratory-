@@ -18,16 +18,6 @@ def analyze_roulette(num_slots: int, adjacent: bool) -> dict:
     remaining_slots = num_slots - 1          # one slot already fired (was safe)
 
     if adjacent:
-        # Adjacent bullets 
-        # Label the slots 1..N with bullets at positions 1 and 2.
-        # If the barrel is spun randomly and we get a safe click,
-        # the fired slot must have been one of the (num_safe) safe slots.
-        #
-        # Key insight: once we know a safe slot was fired,
-        # the NEXT slot in the rotation is now the current chamber.
-        # We need to count how many of those "next slots" are safe.
-        #
-        # Enumerate all possible fired positions and check the next one:
         slots = list(range(1, num_slots + 1))
 
         # Mark which slots are bullets (positions 1 and 2 = adjacent pair)
