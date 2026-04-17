@@ -1,9 +1,6 @@
 import random
 import statistics
 
-# ─────────────────────────────────────────────
-# CORE GAME LOGIC
-# ─────────────────────────────────────────────
 def play_one_game() -> tuple[int, float]:
     """
     Simulate a single round of the St. Petersburg game.
@@ -13,7 +10,7 @@ def play_one_game() -> tuple[int, float]:
         (j, payout): toss number and dollar winnings
     """
     j = 1
-    while random.random() > 0.5:  # tails → keep flipping
+    while random.random() > 0.5:  
         j += 1
     payout = 2 ** j
     return j, payout
@@ -26,9 +23,6 @@ def simulate(n_games: int) -> list[float]:
     return [play_one_game()[1] for _ in range(n_games)]
 
 
-# ─────────────────────────────────────────────
-# ANALYSIS HELPERS
-# ─────────────────────────────────────────────
 def summarise(payouts: list[float], fee: float, label: str) -> None:
     """
     Print a statistical summary for a set of simulated payouts.
@@ -60,9 +54,7 @@ def reasonable_fee(payouts: list[float]) -> float:
     return statistics.median(payouts)
 
 
-# ─────────────────────────────────────────────
-# HOW FEE DEPENDS ON NUMBER OF PLAYS
-# ─────────────────────────────────────────────
+
 def fee_vs_plays() -> None:
     """
     Show how the average (and thus the 'fair' fee) changes
@@ -90,37 +82,32 @@ def fee_vs_plays() -> None:
     print(f" confirming the paradox: expected value → ∞.")
 
 
-# ─────────────────────────────────────────────
-# MAIN
-# ─────────────────────────────────────────────
 def main():
     random.seed(42)  # reproducible results
 
-    # ── Scenario A: Short run (10 games) ───────────────────
+    #  Scenario A: Short run (10 games) 
     payouts_10 = simulate(10)
     fee_10 = reasonable_fee(payouts_10)
     summarise(payouts_10, fee=fee_10, label="Scenario A — 10 games")
 
-    # ── Scenario B: Medium run (1,000 games) ───────────────
-    payouts_1k = simulate(1_000)
+    #  Scenario B: Medium run (1,000 games)     payouts_1k = simulate(1_000)
     fee_1k = reasonable_fee(payouts_1k)
     summarise(payouts_1k, fee=fee_1k, label="Scenario B — 1,000 games")
 
-    # ── Scenario C: Large run (100,000 games) ──────────────
+    #  Scenario C: Large run (100,000 games) 
     payouts_100k = simulate(100_000)
     fee_100k = reasonable_fee(payouts_100k)
     summarise(payouts_100k, fee=fee_100k, label="Scenario C — 100,000 games")
 
-    # ── How fee changes with number of plays ───────────────
-    fee_vs_plays()
+    #  How fee changes with number of plays     fee_vs_plays()
 
-    # ── Final conclusion ───────────────────────────────────
+    #  Final conclusion 
     print("\n" + "═"*55)
     print(" CONCLUSION")
     print("═"*55)
     print("""
 Despite the infinite theoretical expected value,
-people would realistically be willing to pay only about $2–$15 to play the St. 
+people would realistically be willing to pay only about $2-$15 to play the St. 
 Petersburg game, depending on how many times they are allowed to play.
     """)
 
