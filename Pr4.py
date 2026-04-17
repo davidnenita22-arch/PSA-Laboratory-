@@ -57,10 +57,6 @@ def generate_alternating_streaks(streak_length: int, num_streaks: int) -> list[b
         results.extend([outcome] * streak_length)
     return results
 
-
-
-# ── Main ──────────────────────────────────────────────────────────────────────
-
 if __name__ == "__main__":
 
     # Example 1: Alternating streaks of 4 (W W W W L L L L W W W W ...)
