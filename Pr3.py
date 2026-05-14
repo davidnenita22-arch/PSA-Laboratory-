@@ -2,10 +2,6 @@ import random
 import statistics
 
 def play_labouchere(original: list[int], p_win: float = 18/38, max_steps: int = 5000) -> dict:
-    """
-    Simulate one full Labouchere session.
-    Returns a dictionary with results.
-    """
     line = original[:]
     original_sum = sum(original)
     profit = 0
@@ -18,9 +14,9 @@ def play_labouchere(original: list[int], p_win: float = 18/38, max_steps: int = 
 
         # Determine bet
         if len(line) == 1:
-            bet = line[0]
+            bet = line[0] # only one number left, bet that
         else:
-            bet = line[0] + line[-1]
+            bet = line[0] + line[-1]  # sum of first and last
 
         max_bet = max(max_bet, bet)
 
@@ -30,9 +26,9 @@ def play_labouchere(original: list[int], p_win: float = 18/38, max_steps: int = 
             profit += bet
             # Remove first and last
             if len(line) > 1:
-                line = line[1:-1]
+                line = line[1:-1] 
             else:
-                line = []
+                line = [] 
         else:
             # LOSE
             profit -= bet
@@ -57,8 +53,7 @@ def simulate_many(n_simulations: int = 2000, original: list[int] = [1, 2, 3, 4])
     print(f"Original list : {original}  (target profit = ${sum(original)})")
     print(f"Simulations   : {n_simulations:,}\n")
 
-    for p_win, label in [(0.5, "FAIR GAME (p=50% — theoretical)"),
-                         (18/38, "REAL ROULETTE (American, p≈47.37%)")]:
+    for p_win, label in [(18/38, "REAL ROULETTE (American, p≈47.37%)")]:
         
         results = []
         for _ in range(n_simulations):
@@ -69,15 +64,14 @@ def simulate_many(n_simulations: int = 2000, original: list[int] = [1, 2, 3, 4])
         profits = [r["profit"] for r in results]
 
         print(f"→ {label}")
-        print(f"  Terminated successfully : {len(terminated):,} / {n_simulations:,} "
-              f"({len(terminated)/n_simulations*100:5.1f}%)")
-        print(f"  Average profit          : ${statistics.mean(profits):8.2f}")
-        print(f"  Median profit           : ${statistics.median(profits):8.2f}")
-        print(f"  Worst loss              : ${min(profits):8.2f}")
+        print(f"  Terminated successfully : {len(terminated):,} / {n_simulations:,} ")
+        print(f"  Average profit : ${statistics.mean(profits):.2f}")
+        print(f"  Median profit : ${statistics.median(profits):.2f}")
+        print(f"  Worst loss : ${min(profits):.2f}")
         print(f"  Biggest bet ever placed : ${max(r['max_bet'] for r in results):8,.0f}")
-        print(f"  Avg steps per session   : {statistics.mean(r['steps'] for r in results):8,.0f}\n")
+        print(f"  Avg steps per session : {statistics.mean(r['steps'] for r in results):.0f}\n")
 
 
 if __name__ == "__main__":
-    random.seed(42)          # reproducible
+    random.seed(42)          
     simulate_many()

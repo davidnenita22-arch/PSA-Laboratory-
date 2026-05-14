@@ -9,7 +9,7 @@ def simulate_oscars_grind(spin_results: list[bool]) -> None:
     sequence = 1
 
     for i, win in enumerate(spin_results, start=1):
-        outcome_str = "WIN  ✓" if win else "LOSS ✗"
+        outcome_str = "WIN" if win else "LOSS"
 
         # Record bet BEFORE outcome
         current_bet = bet
@@ -60,21 +60,21 @@ def generate_alternating_streaks(streak_length: int, num_streaks: int) -> list[b
 if __name__ == "__main__":
 
     # Example 1: Alternating streaks of 4 (W W W W L L L L W W W W ...)
-    print("\n── Example 1: Alternating streaks of 4 (8 streaks) ──\n")
+    print("\n Example 1: Alternating streaks of 4 (8 streaks) \n")
     spins = generate_alternating_streaks(streak_length=4, num_streaks=8)
     print("Spin sequence:", ["W" if s else "L" for s in spins])
     print()
     simulate_oscars_grind(spins)
 
     # Example 2: Brutal losing streak then recovery
-    print("\n── Example 2: 8 losses then 8 wins ──\n")
+    print("\n Example 2: 8 losses then 8 wins \n")
     spins2 = [False] * 8 + [True] * 8
     print("Spin sequence:", ["W" if s else "L" for s in spins2])
     print()
     simulate_oscars_grind(spins2)
 
     # Example 3: Custom — you can define any sequence of W/L
-    print("\n── Example 3: Custom sequence ──\n")
+    print("\n Example 3: Custom sequence \n")
     custom = [True, False, True, True, False, False, False, True, True, True]
     print("Spin sequence:", ["W" if s else "L" for s in custom])
     print()

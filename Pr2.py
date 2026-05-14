@@ -3,62 +3,43 @@ from fractions import Fraction
 
 def analyze_roulette(num_slots: int, adjacent: bool) -> dict:
     num_bullets = 2
-    num_safe    = num_slots - num_bullets   # how many empty (safe) chambers exist
-
-    #  CASE 1: Spin the barrel before the 2nd pull 
-    # Spinning resets everything. Each slot is equally likely.
-    # Probability of landing on a safe slot = safe_slots / total_slots
+    num_safe = num_slots - num_bullets  # how many empty (safe) chambers exist
+    
     p_survive_spin = Fraction(num_safe, num_slots)
 
-    # CASE 2: Pull without spinning 
-    # The first pull was safe, so we KNOW the first slot fired was empty.
-    # That leaves (num_slots - 1) unfired slots. Of those, how many are safe?
-    # The answer depends on whether bullets are adjacent or not.
-
-    remaining_slots = num_slots - 1          # one slot already fired (was safe)
+    remaining_slots = num_slots - 1  # one slot already fired (was safe)
 
     if adjacent:
-        slots = list(range(1, num_slots + 1))
+        slots = list(range(1, num_slots + 1)) 
 
         # Mark which slots are bullets (positions 1 and 2 = adjacent pair)
         bullet_positions = {1, 2}
 
-        safe_fired_slots = [s for s in slots if s not in bullet_positions]
+        safe_fired_slots = [s for s in slots if s not in bullet_positions] #list chamber that are safe
 
-        # For each safe fired slot, what is the NEXT slot in the cylinder?
-        next_slots_after_safe_fire = [
-            (s % num_slots) + 1 for s in safe_fired_slots
-        ]
+        # For each safe fired slot, what is the next slot
+        next_slots_after_safe_fire = [(s % num_slots) + 1 for s in safe_fired_slots]
 
         # Count how many of those next slots are also safe
-        safe_next = sum(
-            1 for s in next_slots_after_safe_fire if s not in bullet_positions
-        )
+        safe_next = sum(1 for s in next_slots_after_safe_fire if s not in bullet_positions)
 
-        # P(survive | no spin, adjacent) = safe next slots / total safe fired slots
         p_survive_nospin = Fraction(safe_next, len(safe_fired_slots))
 
     else:
         # Non-adjacent bullets 
-        # Bullets are spread out (not neighbors). Place them at positions 1
         # and ceil(N/2)+1 to guarantee non-adjacency.
         import math
         bullet_positions = {1, math.ceil(num_slots / 2) + 1}
 
-        slots = list(range(1, num_slots + 1))
+        slots = list(range(1, num_slots + 1)) 
         safe_fired_slots = [s for s in slots if s not in bullet_positions]
 
-        next_slots_after_safe_fire = [
-            (s % num_slots) + 1 for s in safe_fired_slots
-        ]
+        next_slots_after_safe_fire = [(s % num_slots) + 1 for s in safe_fired_slots]
 
-        safe_next = sum(
-            1 for s in next_slots_after_safe_fire if s not in bullet_positions
-        )
+        safe_next = sum(1 for s in next_slots_after_safe_fire if s not in bullet_positions)
 
         p_survive_nospin = Fraction(safe_next, len(safe_fired_slots))
 
-    # Recommendation
     if p_survive_nospin > p_survive_spin:
         recommendation = "Do not spin"
     elif p_survive_spin > p_survive_nospin:
@@ -78,8 +59,8 @@ def analyze_roulette(num_slots: int, adjacent: bool) -> dict:
 def print_results(results: dict) -> None:
     """Pretty-print a single scenario result."""
     adj_label = "Adjacent bullets" if results["adjacent"] else "Non-adjacent bullets"
-    spin_pct  = float(results["p_survive_spin"])  * 100
-    nospin_pct= float(results["p_survive_nospin"])* 100
+    spin_pct = float(results["p_survive_spin"])  * 100
+    nospin_pct = float(results["p_survive_nospin"])* 100
 
     print(f"  {adj_label}")
     print(f"    Spin first : {results['p_survive_spin']} = {spin_pct:.2f}%")
@@ -97,7 +78,7 @@ def main():
         (5, False),  # 5-slot, non-adjacent
     ]
 
-    current_slots = None
+    current_slots = None # Track when we switch from 6 to 5 slots to print a header
     for num_slots, adjacent in scenarios:
         if num_slots != current_slots:
             current_slots = num_slots
@@ -105,19 +86,6 @@ def main():
 
         results = analyze_roulette(num_slots, adjacent)
         print_results(results)
-        
-    print(f"  {'Scenario':<35} {'Spin':>8} {'No Spin':>10} {'Best':>20}")
-    print(f"  {'-'*35} {'-'*8} {'-'*10} {'-'*20}")
-    for num_slots, adjacent in scenarios:
-        r = analyze_roulette(num_slots, adjacent)
-        adj_label = "adjacent" if adjacent else "non-adjacent"
-        label = f"{num_slots}-slot, {adj_label}"
-        spin_pct   = f"{float(r['p_survive_spin'])*100:.1f}%"
-        nospin_pct = f"{float(r['p_survive_nospin'])*100:.1f}%"
-        print(f"  {label:<35} {spin_pct:>8} {nospin_pct:>10} {r['recommendation']:>20}")
 
-    print()
-
-
-if __name__ == "__main__":
+if __name__ == "__main__":  
     main()
